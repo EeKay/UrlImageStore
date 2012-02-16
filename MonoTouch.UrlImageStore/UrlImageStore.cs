@@ -28,16 +28,20 @@ using System.Security.Cryptography;
 			imageStore = new UrlImageStore ("myImageStore", processImage);						            
         }
 						
-		private static ImageManager instance;
+		private static ImageManager instance = null;
+		private static readonly object padlock = new object(); 
 		
 		public static ImageManager Instance
 		{
 			get
 			{
-				if (instance == null)
-					instance = new ImageManager ();
-				
-				return instance;
+				lock(padlock)
+				{
+					if (instance == null)
+						instance = new ImageManager ();
+					
+					return instance;
+				}
 			}	
 		}
 		
